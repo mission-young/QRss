@@ -15,5 +15,6 @@ void newsModel::addItem(QString title,QString link)
 void newsModel::creatHeadr()
 {
     setHorizontalHeaderItem(0,new QStandardItem("文章标题"));
+    // git test
 }
 
