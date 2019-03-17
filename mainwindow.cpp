@@ -10,20 +10,22 @@ MainWindow::MainWindow(QWidget *parent) :
     feedmodel=new FeedModel(this);
     ui->tvRes->setModel(feedmodel);
     feedmodel->creatHeader();
-    ui->tvRes->horizontalHeader()->setStretchLastSection(true);
-    ui->tvRes->verticalHeader()->hide();
+    ui->tvRes->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    int width=ui->tvRes->columnWidth(0)+ui->tvRes->columnWidth(1);
+    ui->tvRes->setColumnWidth(0,int(0.4*width));
 
 
     newsmodel=new newsModel(this);
     ui->tvNewsList->setModel(newsmodel);
     newsmodel->creatHeadr();
-    ui->tvNewsList->horizontalHeader()->setStretchLastSection(true);
+    ui->tvNewsList->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     manager=new QNetworkAccessManager(this);
 
     webview=new QWebEngineView(this);
     ui->weblayout->addWidget(webview);
-    //git test
+
+    JsonParser::load("feedmodel.json",feedmodel);
 }
 
 MainWindow::~MainWindow()
@@ -36,22 +38,11 @@ void MainWindow::on_btnAdd_clicked()
     if(rsswin.exec()==QDialog::Accepted){
         feedmodel->AddItem(rsswin.name(),rsswin.link());
         rsswin.clearcnt();
+        JsonParser::save("feedmodel.json",feedmodel);
     }
+
 }
 
-
-void MainWindow::on_tvRes_clicked(const QModelIndex &index)
-{
-
-    QNetworkRequest request;
-    request.setUrl(QUrl(feedmodel->item(index.row(),1)->data().toString()));
-    request.setRawHeader("User-Agent","MyOwnBrowser 1.0");
-
-    reply=manager->get(request);
-    connect(reply,SIGNAL(readyRead()),this,SLOT(anarss()));
-    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),
-            this,SLOT(error(QNetworkReply::NetworkError)));
-}
 
 void MainWindow::anarss()
 {
@@ -60,8 +51,6 @@ void MainWindow::anarss()
     QXmlStreamReader xmlstream;
     xmlstream.addData(cnt);
     QString titleStr,linkStr,currentTag;
-
-    newsmodel->removeRows(0,1000);
     while (!xmlstream.atEnd()) {
         xmlstream.readNext();
         if(xmlstream.isStartElement()){
@@ -97,4 +86,28 @@ void MainWindow::on_tvNewsList_clicked(const QModelIndex &index)
 {
     webview->load(QUrl(newsmodel->data(index,Qt::UserRole+1).toString()));
     webview->showNormal();
+}
+
+void MainWindow::on_btnDelete_clicked()
+{   ui->tvRes->selectionModel()->currentIndex().row();
+    int row=ui->tvRes->currentIndex().row();
+    feedmodel->removeRow(row);
+    JsonParser::save("feedmodel.json",feedmodel);
+}
+
+void MainWindow::on_tvRes_doubleClicked(const QModelIndex &index)
+{
+    QNetworkRequest request;
+    request.setUrl(QUrl(feedmodel->item(index.row(),1)->data().toString()));
+    request.setRawHeader("User-Agent","MyOwnBrowser 1.0");
+
+    reply=manager->get(request);
+    connect(reply,SIGNAL(readyRead()),this,SLOT(anarss()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),
+            this,SLOT(error(QNetworkReply::NetworkError)));
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    newsmodel->removeRows(0,newsmodel->rowCount());
 }

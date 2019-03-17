@@ -16,4 +16,4 @@ void newsModel::creatHeadr()
 {
     setHorizontalHeaderItem(0,new QStandardItem("文章标题"));
 }
-
+//

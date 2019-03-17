@@ -10,7 +10,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QXmlStreamReader>
 #include <QWebEngineView>
-
+#include "jsonparser.h"
 namespace Ui {
 class MainWindow;
 }
@@ -26,11 +26,16 @@ public:
 private slots:
     void on_btnAdd_clicked();
 
-    void on_tvRes_clicked(const QModelIndex &index);
     void anarss();
     void error(QNetworkReply::NetworkError err);
 
     void on_tvNewsList_clicked(const QModelIndex &index);
+    void on_btnDelete_clicked();
+
+    void on_tvRes_doubleClicked(const QModelIndex &index);
+
+    void on_pushButton_clicked();
+
 private:
     QWebEngineView *webview;
 private:

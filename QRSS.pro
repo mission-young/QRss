@@ -29,13 +29,15 @@ SOURCES += \
         mainwindow.cpp \
     addrsssource.cpp \
     feedmodel.cpp \
-    newsmodel.cpp
+    newsmodel.cpp \
+    jsonparser.cpp
 
 HEADERS += \
         mainwindow.h \
     addrsssource.h \
     feedmodel.h \
-    newsmodel.h
+    newsmodel.h \
+    jsonparser.h
 
 FORMS += \
         mainwindow.ui \
