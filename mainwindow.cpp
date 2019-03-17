@@ -107,7 +107,7 @@ void MainWindow::on_tvRes_doubleClicked(const QModelIndex &index)
             this,SLOT(error(QNetworkReply::NetworkError)));
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_btnClear_clicked()
 {
     newsmodel->removeRows(0,newsmodel->rowCount());
 }
