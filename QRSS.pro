@@ -50,3 +50,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     Readme.md
+
+RESOURCES += \
+    qrss.qrc

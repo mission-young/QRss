@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/starOff.png</file>
+        <file>images/starOn.png</file>
+    </qresource>
+</RCC>

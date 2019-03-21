@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tvNewsList->setModel(newsmodel);
     newsmodel->creatHeadr();
     ui->tvNewsList->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    width=ui->tvNewsList->columnWidth(0)+ui->tvRes->columnWidth(1);
+    ui->tvNewsList->setColumnWidth(0,int(0.15*width));
 
     manager=new QNetworkAccessManager(this);
 
@@ -84,8 +86,31 @@ void MainWindow::error(QNetworkReply::NetworkError err)
 
 void MainWindow::on_tvNewsList_clicked(const QModelIndex &index)
 {
-    webview->load(QUrl(newsmodel->data(index,Qt::UserRole+1).toString()));
-    webview->showNormal();
+    static QUrl link;
+    switch (index.column()) {
+    case 0:
+    {
+        newsmodel->starOnOff(index);
+        break;
+    }
+    case 1:
+    {
+        link=QUrl(newsmodel->data(index,Qt::UserRole+1).toString());
+        //链接进行了跳转，因而每次link获取的链接和实际加载的url不一样，因而无法每次点击按钮都会刷新。QNetworkReply似乎能
+        //获得跳转后的链接，但涉及到网络部分比较复杂，这个后续在做处理。
+        //        if(link.toString()!=webview->url().toString()){
+        //            webview->load(link);
+        //            webview->show();
+        //        }
+        webview->load(link);
+        webview->show();
+        break;
+    }
+    default:
+    {
+
+    }
+    }
 }
 
 void MainWindow::on_btnDelete_clicked()

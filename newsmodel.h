@@ -10,6 +10,7 @@ public:
     explicit newsModel(QObject *parent = nullptr);
     void addItem(QString title,QString link);
     void creatHeadr();
+    void starOnOff(const QModelIndex &index);
 signals:
 
 public slots:
